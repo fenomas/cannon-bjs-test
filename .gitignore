@@ -1,0 +1,6 @@
+npm-debug.log
+node_modules
+art/
+build/
+src/external/
+.~lock*
