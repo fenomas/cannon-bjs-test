@@ -6,7 +6,7 @@ window.CANNON = require('cannon')
 require('./addVoxels')(CANNON)
 
 // new voxels shape type class
-var VoxelShape = require('./Voxels')
+var VoxelShape = require('./voxels')
 
 // demo code
 var shell = require('game-shell')({ preventDefault: false, })
