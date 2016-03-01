@@ -1,43 +1,51 @@
+module.exports = Voxels;
 
-module.exports = function() {
-	return new Voxels()
-}
+var Shape = CANNON.Shape // require('cannon/src/shapes/Shape');
+var Vec3 =  CANNON.Vec3 // require('cannon/src/math/Vec3');
 
+function Voxels(queryFn) {
+	Shape.call(this);
 
-function Voxels() {
-	var size = 16
-	var arr = new Int8Array(size * size * size)
-	// props
-	this.arr = arr
-	this.size = size
-	this.size2 = size * size
+	/**
+	 * @property {Function} query
+	 */
+	this.query = queryFn
+	this.type = Shape.types.VOXELS;
 
-	// init
-	for (var i = 0; i < size; i++) {
-		for (var j = 0; j < size; j++) {
-			for (var k = 0; k < size; k++) {
-				var val = (j < 2) ? 1 : 0
-				if (j == 2) {
-					if (Math.random() < 0.3) val = 1
-				}
-				if (j == 3) {
-					if (i*k==0 || i==15 || k==15) val = 1
-				}
-				this.set(i, j, k, val)
-			}
-		}
+	// remove
+	this.radius = 10;
+
+	if (!queryFn) {
+		throw new Error('Voxel shape needs a voxel-solidity query function.');
 	}
+
+	this.updateBoundingSphereRadius();
 }
-
-Voxels.prototype.set = function(x, y, z, val) {
-	this.arr[x * this.size2 + y * this.size + z] = val
-}
-Voxels.prototype.get = function(x, y, z) {
-	return this.arr[x * this.size2 + y * this.size + z]
-}
+Voxels.prototype = new Shape();
+Voxels.prototype.constructor = Voxels;
 
 
+Voxels.prototype.calculateLocalInertia = function(mass, target) {
+	target = target || new Vec3();
+	target.set(0, 0, 0);
+	return target;
+};
 
+Voxels.prototype.volume = function() {
+	// infinite terrain
+	return Number.MAX_VALUE;
+};
+
+Voxels.prototype.updateBoundingSphereRadius = function() {
+	// infinite terrain
+	this.boundingSphereRadius = Number.MAX_VALUE;
+};
+
+Voxels.prototype.calculateWorldAABB = function(pos, quat, min, max) {
+	// infinite terrain
+	min.set(-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
+	max.set(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
+};
 
 
 
